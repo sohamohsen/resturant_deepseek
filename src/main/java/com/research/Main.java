@@ -1,17 +1,42 @@
 package com.research;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import com.research.repository.*;
+import com.research.service.*;
+import com.research.ui.ConsoleUI;
+
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        try {
+            // Initialize repositories
+            StaffRepository staffRepository = new StaffRepositoryImpl();
+            MenuCategoryRepository categoryRepository = new MenuCategoryRepositoryImpl();
+            MenuItemRepository menuItemRepository = new MenuItemRepositoryImpl();
+            CustomerRepository customerRepository = new CustomerRepositoryImpl();
+            TableRepository tableRepository = new TableRepositoryImpl();
+            OrderRepository orderRepository = new OrderRepositoryImpl();
+            ReservationRepository reservationRepository = new ReservationRepositoryImpl();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+            // Initialize services
+            StaffService staffService = new StaffService(staffRepository);
+            MenuCategoryService categoryService = new MenuCategoryService(categoryRepository);
+            MenuItemService menuItemService = new MenuItemService(menuItemRepository, categoryRepository);
+            CustomerService customerService = new CustomerService(customerRepository);
+            TableService tableService = new TableService(tableRepository);
+            OrderService orderService = new OrderService(orderRepository, customerRepository,
+                    menuItemRepository, customerService);
+            ReservationService reservationService = new ReservationService(reservationRepository,
+                    customerRepository, tableRepository, tableService);
+
+            // Initialize and start UI
+            ConsoleUI consoleUI = new ConsoleUI(staffService, categoryService, menuItemService,
+                    customerService, tableService, orderService, reservationService);
+
+            consoleUI.start();
+
+        } catch (Exception e) {
+            System.err.println("Application error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -1,4 +1,6 @@
 package com.research.repository;
 
-public class MenuCategoryRepository {
+import com.research.model.MenuCategory;
+
+public interface MenuCategoryRepository extends Repository<MenuCategory> {
 }

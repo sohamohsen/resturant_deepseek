@@ -1,4 +1,11 @@
 package com.research.repository;
 
-public class MenuItemRepository {
+import com.research.model.MenuItem;
+
+import java.util.List;
+
+public interface MenuItemRepository extends Repository<MenuItem> {
+    List<MenuItem> findByName(String name);
+    List<MenuItem> findByCategory(int categoryId);
+    List<MenuItem> findAvailableItems();
 }
